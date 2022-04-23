@@ -88,5 +88,5 @@ If you prefer to use the terminal instead of `xbar` for copying and pasting MFA 
         fi
     }
     ```
-* Re-load terminal. After successfully retieving a code, the value will be copied to your system clipboard.
+* Re-load terminal. After successfully retrieving a code, the value will be copied to your system clipboard.
     ![](./images/mfa-terminal.png)
