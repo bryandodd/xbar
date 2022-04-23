@@ -5,6 +5,9 @@ This repository contains [xbar](https://github.com/matryer/xbar) modules. Script
 ## Modules
 
 ### `mfa-codes.5s.sh`
+
+![](./images/mfa-codes-1.png) ![](./images/mfa-codes-2.png)
+
 ``` bash
 # Dependencies:
 #   OATH-Toolkit (https://www.nongnu.org/oath-toolkit/)
