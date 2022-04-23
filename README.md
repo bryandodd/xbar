@@ -1,0 +1,2 @@
+# xbar
+macOS xbar modules
