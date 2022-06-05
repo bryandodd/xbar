@@ -1,0 +1,10 @@
+# TOKENS
+
+aws-prod	ABC123ABC123ABC1	user@email.com	AWS (Prod)
+aws-dev	ABC123ABC123ABC1	user2@email2.com	AWS (Dev)
+microsoft	ABC123ABC123ABC1	user3@email3.com	O365
+vpn	ABC123ABC123ABC1	user4	Office VPN
+lastpass	ABC123ABC123ABC1	user5@email5.com	LastPass
+gitlab	ABC123ABC123ABC1	user6@email6.com	GitLab (Personal)
+outlook	ABC123ABC123ABC1	user7@outlook.com	Outlook (Personal)
+paypal	ABC123ABC123ABC1	user8@email8.com	PayPal (Personal)
