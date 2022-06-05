@@ -9,16 +9,16 @@ Only you can make the decision about the level of security you require, but I st
 _HOWEVER_, it is still up to you to ensure that your Yubikey is configured properly and securely, and that it is handled in a secure way. Yubikeys are a great value for the cost when weighed against the benefits gained in terms of security.
 
 **Yubikey xbar module**: _(see `./yubikey-support`)_
-* [Yubikey MFA for macOS](./yubikey-support/yubikey-readme.md)
+* [Yubikey MFA for macOS](./yubikey-support/README.md)
     * Current Version: `v1.0.2`
 
 **Legacy xbar module**: _(see `./legacy`)_
-* [Legacy MFA for macOS](./legacy/legacy-readme.md)
+* [Legacy MFA for macOS](./legacy/README.md)
     * Current Version: `v1.1.0`
 
 **Terminal**: _(see `./terminal`)_
-* [Yubikey MFA via Termianl](./terminal/yubikey.md)
+* [Yubikey MFA via Termianl](./terminal-yubikey/README.md)
     * Current Version: `v1.0.0`
-* [Legacy MFA via Terminal](./terminal/legacy.md)
+* [Legacy MFA via Terminal](./terminal-legacy/README.md)
     * Current Version: `v0.1.0`
 

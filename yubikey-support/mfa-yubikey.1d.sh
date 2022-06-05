@@ -64,7 +64,7 @@ groupPrimaryName=" Work Codes"
 groupPrimaryColor="blue"
 groupPrimaryList=(
     "AWS [Prod]:usera@example.com"
-    "O365:bryan.usera@example.com"
+    "O365:usera@example.com"
     "VPN:usera"
     "LastPass:useralpha"
 )
