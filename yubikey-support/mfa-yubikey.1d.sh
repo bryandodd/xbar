@@ -3,9 +3,10 @@
 # <xbar.version>v1.0.2</xbar.version>
 # <xbar.author>Bryan Dodd</xbar.author>
 # <xbar.author.github>bryandodd</xbar.author.github>
-# <xbar.desc>Displays MFA codes. Refreshes daily by default.</xbar.desc>
-# <xbar.dependencies>bash, ykman</xbar.dependencies>
+# <xbar.desc>Decode TOTP codes from YubiKey OATH. Refreshes daily by default.</xbar.desc>
+# <xbar.dependencies>bash,ykman</xbar.dependencies>
 # <xbar.image>https://github.com/bryandodd/xbar/raw/main/images/yubikey-2.png</xbar.image>
+# <xbar.abouturl>https://github.com/bryandodd/xbar/tree/main/yubikey-support</xbar.abouturl>
 
 # Dependencies:
 #   yubikey-manager (https://github.com/Yubico/yubikey-manager)
