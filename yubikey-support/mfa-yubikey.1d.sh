@@ -1,23 +1,23 @@
 #!/bin/bash
-# <xbar.title>MFA (Yubikey) On-Demand</xbar.title>
+# <xbar.title>YubiKey MFA</xbar.title>
 # <xbar.version>v1.0.2</xbar.version>
 # <xbar.author>Bryan Dodd</xbar.author>
 # <xbar.author.github>bryandodd</xbar.author.github>
 # <xbar.desc>Displays MFA codes. Refreshes daily by default.</xbar.desc>
 # <xbar.dependencies>bash, ykman</xbar.dependencies>
-# <xbar.image> </xbar.image>
+# <xbar.image>https://github.com/bryandodd/xbar/raw/main/images/yubikey-2.png</xbar.image>
 
 # Dependencies:
 #   yubikey-manager (https://github.com/Yubico/yubikey-manager)
 #       brew install ykman
 
 # Settings:
-# 1. If your Yubikey has been configured to require a password for OATH use, change "ykPassRequired"
+# 1. If your YubiKey has been configured to require a password for OATH use, change "ykPassRequired"
 #    to TRUE. If set to TRUE, "ykPassword" must also be supplied for proper operation. 
 # 2. If "ykPassRequired" was set to TRUE, set "ykPassword" to the plain-text string of your password.
 #    Note -- If you change the single-apostrophe to double-apostrophe, you must ESCAPE your string.
 #            For example, if your password contains a "!" character, you must escape it with "\!"
-# 3. By default, keys are read directly from Yubikey and output in alphabetical order (such is Yubikey's
+# 3. By default, keys are read directly from YubiKey and output in alphabetical order (such is YubiKey's
 #    default). If you prefer to override the order, display only select codes, or group codes into
 #    categories, set "ykOrderOverride" to TRUE. When set to TRUE, you must supply at minimum
 #    "groupPrimaryList", but see the seven (7) "group" variables below:
@@ -32,14 +32,17 @@
 #        * groupSecondaryName:   Category name, used only if "groupSecondaryEnable" is TRUE.
 #        * groupSecondaryColor:  Category name display color.
 #        * groupSecondaryList:   See explanation of "groupPrimaryList" above.
+# 4. To use Nerd Font glyphs in conjunction with OATH key names, set "iconEnable" to TRUE. When enabled,
+#    values specified in the `iconArray` will be used to "look up" which glyphs should be used with each OATH 
+#    code from the YubiKey.
 
 # Other Notes and Comments:
 # *  Tested and works well with Nerd Fonts. My preference is 'JetBrains Mono Nerd Font' but this
 #    can easily be changed to your own liking. See "FONT" variable below.
 #
-# *  Tested and works well with Yubikey OATH codes regardless of their "touch" setting. If your code
+# *  Tested and works well with YubiKey OATH codes regardless of their "touch" setting. If your code
 #    has been configured to require touch, no additional prompts will display on-screen, but your
-#    Yubikey will begin to flash after clicking the name of the code you wish to retreive. Tap your
+#    YubiKey will begin to flash after clicking the name of the code you wish to retreive. Tap your
 #    key as usual and the value will be recorded to the macOS clipboard. 
 # 
 # *  If you're experiencing issues with dependencies not being located correctly, check the "PATH"
@@ -48,7 +51,7 @@
 
 ykPassRequired=false
 ykPassword='YUBIKEY-OATH-PASSWORD'
-ykOrderOverride=true
+ykOrderOverride=false
 iconEnable=true
 submenuEnable=false
 
@@ -114,13 +117,13 @@ then
 fi
 
 # xbar start
-echo "Yubikey MFA"
+echo "YubiKey MFA"
 echo "---"
 
 ykTest=$(ykman list)
 if [ -z "$ykTest" ]
 then
-    echo "Yubikey not detected."
+    echo "YubiKey not detected."
     echo "Insert key and click to reload.| terminal=false refresh=true"
 else
     if [ "$ykOrderOverride" = false ]
