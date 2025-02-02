@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # <xbar.title>YubiKey MFA</xbar.title>
-# <xbar.version>v1.0.2</xbar.version>
+# <xbar.version>v1.0.3</xbar.version>
 # <xbar.author>Bryan Dodd</xbar.author>
 # <xbar.author.github>bryandodd</xbar.author.github>
 # <xbar.desc>Decode TOTP codes from YubiKey OATH. Refreshes daily by default.</xbar.desc>
@@ -56,16 +56,23 @@ ykOrderOverride=false
 iconEnable=true
 submenuEnable=false
 
-FONT=( "size=13 font='JetBrainsMonoNerdFontComplete-Regular'" )
-LABELFONT=( "size=14 font='JetBrainsMonoNerdFontComplete-Bold-Italic'" )
-PATH=/usr/local/bin:/usr/bin
+FONT=( "size=13 font='JetBrainsMonoNFP-Regular'" )
+LABELFONT=( "size=14 font='JetBrainsMonoNFP-BoldItalic'" )
+
+# update PATH for Apple Silicon
+if [[ $(uname -m) == 'arm64' ]]
+then
+    PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+else
+    PATH="/usr/local/sbin:$PATH"
+fi
 
 # oath list collection from yubikey
 ykOathList=""
 
 # Optional: manually control ordering / grouping of codes
 groupPrimaryName=" Work Codes"
-groupPrimaryColor="blue"
+groupPrimaryColor=$(if [ "$submenuEnable" = "true" ]; then echo "#807FFE"; else echo "BLUE"; fi;)
 groupPrimaryList=(
     "AWS [Prod]:usera@example.com"
     "O365:usera@example.com"
@@ -75,7 +82,7 @@ groupPrimaryList=(
 
 groupSecondaryEnable=true
 groupSecondaryName=" Personal Codes"
-groupSecondaryColor="yellow"
+groupSecondaryColor=$(if [ "$submenuEnable" = "true" ]; then echo "#FFFF80"; else echo "YELLOW"; fi;)
 groupSecondaryList=(
     "AWS [Personal]:usera@email.com"
     "Synology:usera@email.com"

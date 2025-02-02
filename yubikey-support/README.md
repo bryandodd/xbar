@@ -21,12 +21,15 @@
 | ------- | ---- |
 | `ykOathList` | Intentionally empty. Do not modify. |
 | `groupPrimaryName` / `groupSecondaryName` | Heading name for groups of OATH codes. |
-| `groupPrimaryColor` / `groupSecondaryColor` | Heading colors for groups of OATH codes. |
+| `groupPrimaryColor` / `groupSecondaryColor` | Heading colors for groups of OATH codes. When `submenuEnable` is true, headings become interactive and the colors become darker. Using the IF statement, manually specify a lighter color for submenus to keep colors consistent between modes.<br />`$(if [ "$submenuEnable" = "true" ]; then echo "#807FFE"; else echo "BLUE"; fi;)` |
 | `groupPrimaryList` / `groupSecondaryList` | Array of OATH keys. The format must match the output from Yubikey. To see which keys are available on your device, run `ykman oath accounts list`. Values must be contained within double-quotes and do not separate with commas (`,`). |
 | `iconArray` | Used only if `iconEnable` is `true`. Array of labels paired with Nerd Font glyphs. Separate key/value with a colon (`:`), use double quotes (`"`), and do not separate value pairs with commas (`,`). If an OATH key is found that does not have a matching glyph, a circle and exclaimation glyph will display for that OATH entry. |
 
 ### Notes
-* Tested with Nerd Fonts. My preference is `JetBrains Mono Nerd Font`, but this can easily be changed to your liking. See the `FONT` variable.
+* Tested with Nerd Fonts. My preference is `JetBrains Mono Nerd Font Propo`, but this can easily be changed to your liking. The "propo" fonts by [NerdFonts](https://www.nerdfonts.com/) proportionalize the icons for a more pleasing arrangement for UI purposes. See the `FONT` variable.
 * If your Yubikey is not inserted when the `xbar` application loads, or if your key is not detected for any other reason, you may see a "Yubikey not detected" message. Insert your Yubikey and click the "reload" option to refresh the extension and read OATH codes from your device.
 * Tested and working with Yubikey OATH codes regardless of "touch" setting. If your code has been configured to require touch, no additional prompts will display on-screen, but your Yubikey will begin to flash after clicking the name of the code you with you retrieve. Tap your key as usual and the value will be recorded to the macOS clipboard.
-* If you're experiencing issues with dependencies not loading properly, check your `PATH` and modify the variable of the same name in the script. For Homebrew users, you could also consider adding the prefix to the script's path - for example: `PATH="/usr/local/bin:/usr/bin:$(brew --prefix)/bin"`
+
+### Changes
+* The *shebang* has been changed from `#!/bin/bash` to `#!/usr/bin/env bash`.
+* The previous version included poor handling for the `PATH` variable. The current version has checks to determine if it is running on Apple Silicon and sets the Homebrew path accordingly.
