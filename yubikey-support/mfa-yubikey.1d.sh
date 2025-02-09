@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # <xbar.title>YubiKey MFA</xbar.title>
-# <xbar.version>v1.0.3</xbar.version>
+# <xbar.version>v1.0.4</xbar.version>
 # <xbar.author>Bryan Dodd</xbar.author>
 # <xbar.author.github>bryandodd</xbar.author.github>
 # <xbar.desc>Decode TOTP codes from YubiKey OATH. Refreshes daily by default.</xbar.desc>
@@ -15,9 +15,11 @@
 # Settings:
 # 1. If your YubiKey has been configured to require a password for OATH use, change "ykPassRequired"
 #    to TRUE. If set to TRUE, "ykPassword" must also be supplied for proper operation. 
+#
 # 2. If "ykPassRequired" was set to TRUE, set "ykPassword" to the plain-text string of your password.
 #    Note -- If you change the single-apostrophe to double-apostrophe, you must ESCAPE your string.
 #            For example, if your password contains a "!" character, you must escape it with "\!"
+#
 # 3. By default, keys are read directly from YubiKey and output in alphabetical order (such is YubiKey's
 #    default). If you prefer to override the order, display only select codes, or group codes into
 #    categories, set "ykOrderOverride" to TRUE. When set to TRUE, you must supply at minimum
@@ -33,9 +35,25 @@
 #        * groupSecondaryName:   Category name, used only if "groupSecondaryEnable" is TRUE.
 #        * groupSecondaryColor:  Category name display color.
 #        * groupSecondaryList:   See explanation of "groupPrimaryList" above.
-# 4. To use Nerd Font glyphs in conjunction with OATH key names, set "iconEnable" to TRUE. When enabled,
+#
+# 4. If you might have multiple YubiKeys connected at some point, change "ykUseSerial" to TRUE. When set to
+#    TRUE, "ykDevice" must also be set to the correct Serial Number of your target YubiKey. 
+#
+# 5. If "ykUseSerial" was set to TRUE, enter the YubiKey Serial Number of the device containing the OATH
+#    codes you wish to use. 
+#
+# 6. To use Nerd Font glyphs in conjunction with OATH key names, set "iconEnable" to TRUE. When enabled,
 #    values specified in the `iconArray` will be used to "look up" which glyphs should be used with each OATH 
 #    code from the YubiKey.
+#
+# 7. When "ykOrderOverride" is TRUE, "groupSecondaryEnable" enables splitting codes between two different groups
+#    or categories (i.e., "Work" and "Personal"). By default, both groups will be displayed on-screen simultaneously.
+#    Set "submenuEnable" (below) to TRUE to nest OATH codes under their group name and cause only one group of codes
+#    to be visible at once. 
+#
+# 8. When "groupSecondaryEnable" is TRUE, "submenuEnable" can be set to TRUE to enable nesting of codes under 
+#    their group names instead of having them displayed on-screen at the same time.  
+#    See #3 above ('groupPrimary' vs 'groupSecondary') for more information. 
 
 # Other Notes and Comments:
 # *  Tested and works well with Nerd Fonts. My preference is 'JetBrains Mono Nerd Font' but this
@@ -46,14 +64,17 @@
 #    YubiKey will begin to flash after clicking the name of the code you wish to retreive. Tap your
 #    key as usual and the value will be recorded to the macOS clipboard. 
 # 
-# *  If you're experiencing issues with dependencies not being located correctly, check the "PATH"
-#    variable below. For homebrew users, you could also consider adding the prefix to the script's
-#    path. Example:  PATH="/usr/local/bin:/usr/bin:$(brew --prefix)/bin"
+# *  If dependencies are not being located correctly, check the "PATH" variable. This script looks at 
+#    '/opt/homebrew/' for Apple Silicon devices, or '/usr/local/' for Intel. For non-standard configurations,
+#    you may need to adjust the PATH.
 
 ykPassRequired=false
 ykPassword='YUBIKEY-OATH-PASSWORD'
 ykOrderOverride=false
+ykUseSerial=false
+ykDevice=99999999
 iconEnable=true
+groupSecondaryEnable=true
 submenuEnable=false
 
 FONT=( "size=13 font='JetBrainsMonoNFP-Regular'" )
@@ -67,9 +88,6 @@ else
     PATH="/usr/local/sbin:$PATH"
 fi
 
-# oath list collection from yubikey
-ykOathList=""
-
 # Optional: manually control ordering / grouping of codes
 groupPrimaryName=" Work Codes"
 groupPrimaryColor=$(if [ "$submenuEnable" = "true" ]; then echo "#807FFE"; else echo "BLUE"; fi;)
@@ -80,7 +98,6 @@ groupPrimaryList=(
     "LastPass:useralpha"
 )
 
-groupSecondaryEnable=true
 groupSecondaryName=" Personal Codes"
 groupSecondaryColor=$(if [ "$submenuEnable" = "true" ]; then echo "#FFFF80"; else echo "YELLOW"; fi;)
 groupSecondaryList=(
@@ -100,28 +117,29 @@ iconArray=(
     "Outlook:"
 )
 
-## Do not edit below this line unless you know what you're doing or have at least made a backup
-## before experimenting. :) 
+## Don't edit below this line unless you know what you're doing 
+## or have at least made a backup before experimenting. :) 
 
 # on-click action - copy to macOS clipboard
 if [ "$1" = 'copyCode' ]; then
-    if [ "$ykPassRequired" = true ]
-    then
-        ykman oath accounts code -p $ykPassword -s "$2" | pbcopy
-    else
-        ykman oath accounts code -s "$2" | pbcopy
-    fi
+    # ykman --device "$ykDevice" oath accounts code -p "$ykPassword" -s "$2"
+    cmd=("ykman")
+    [ "$ykUseSerial" = true ] && cmd+=(--device "$ykDevice")
+    cmd+=(oath accounts code)
+    [ "$ykPassRequired" = true ] && cmd+=(-p "$ykPassword")
+    cmd+=(-s "$2")
+    "${cmd[@]}" | pbcopy
 fi
 
 # get list from yubikey if not manually specifying
-if [ "$ykOrderOverride" = false ]
-then
-    if [ "$ykPassRequired" = true ]
-    then
-        ykOathList=$(ykman oath accounts list -p $ykPassword)
-    else
-        ykOathList=$(ykman oath accounts list)
-    fi
+ykOathList=""
+if [ "$ykOrderOverride" = false ]; then
+    # ykman --device "$ykDevice" oath accounts list -p "$ykPassword"
+    cmd=("ykman")
+    [ "$ykUseSerial" = true ] && cmd+=(--device "$ykDevice")
+    cmd+=(oath accounts list)
+    [ "$ykPassRequired" = true ] && cmd+=(-p "$ykPassword")
+    ykOathList=$("${cmd[@]}")
 fi
 
 # xbar start
@@ -129,10 +147,15 @@ echo "YubiKey MFA"
 echo "---"
 
 ykTest=$(ykman list)
+ykCount=$(echo "$ykTest" | wc -l)
 if [ -z "$ykTest" ]
 then
     echo "YubiKey not detected."
     echo "Insert key and click to reload.| terminal=false refresh=true"
+elif [ "$ykCount" -gt 1 ] && [ "$ykUseSerial" = false ]
+then
+    echo "Multiple YubiKeys detected."
+    echo "Specify target device serial number and click to reload.| terminal=false refresh=true"
 else
     if [ "$ykOrderOverride" = false ]
     then
@@ -146,16 +169,13 @@ else
                     searchTerm="${iconSet%%:*}"
                     icon="${iconSet##*:}"                    
                     if [[ "$issuer" == *"$searchTerm"* ]]; then
-                        if [ "$submenuEnable" = true ]; then icon="-- $icon"; fi;
                         echo "$icon $issuer| $FONT bash='$0' param1=copyCode param2='$ykOathItem' terminal=false"
                         iconFound=true
                     fi
                 done
                 nest=""
-                if [ "$submenuEnable" = true ]; then nest="--"; fi;
                 if [ "$iconFound" = false ]; then echo "${nest} $issuer| $FONT bash='$0' param1=copyCode param2='$ykOathItem' terminal=false"; fi
             else
-                if [ "$submenuEnable" = true ]; then issuer="-- $issuer"; fi;
                 echo "$issuer| $FONT bash='$0' param1=copyCode param2='$ykOathItem' terminal=false"
             fi
         done

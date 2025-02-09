@@ -22,6 +22,9 @@ This tool has four (4) modes of operation. It can be executed as a stand-alone s
 | ------- | ------- | ---- |
 | `ykPasswordRequired` | `false` | Change to `true` if your Yubikey has been configured to require a password for OATH use. When `true`, `ykPasswordString` must also be supplied for proper operation. |
 | `ykPasswordString` | `some-password` | Required when `ykPasswordRequired` is `true`. This value is a plain-text string of your Yubikey OATH password. |
+| `ykUseSerial` | `false` | Change to `true` to directly target a specific Yubikey if you have (or expect to have) multiple Yubikeys connected to your machine at one time. When `true`, `ykDevice` must also be supplied for proper operation. |
+| `ykDevice` | `99999999` | Required when `ykUseSerial` is `true`. The Serial Number of the Yubikey you want the module to read from. |
+| `ykMaxKeys` | `64` | Yubikey devices with firmware 5.7.x now support 64 OATH codes stored on-device (versus 32 previously). |
 
 ## Configuration Settings
 No additional settings available.
@@ -66,3 +69,16 @@ AWS:usera@homeemail.com
 In this scenario, the only resolution is to use the full OATH name as known to Yubikey:
 $ ./yubikey-mfa.sh "AWS:usera@homeemail.com"
 ```
+
+## Changes
+
+### [1.0.1] - 2025-02-09
+
+#### Added
+
+* Support for multiple device handling and enabling selection of specific keys by serial number (`ykUseSerial` and `ykDevice`).
+* Variable to support newer Yubikey's with increased OATH counts.
+
+#### Changed
+
+* Revised the `oath accounts list` and `oath accounts code` actions to be dynamically constructed vs using conditional logic.

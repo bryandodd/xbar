@@ -12,9 +12,12 @@
 | ------- | ------- | ---- |
 | `ykPassRequired` | `false` | Change to `true` if your Yubikey has been configured to require a password for OATH use. When `true`, `ykPassword` must also be supplied for proper operation. |
 | `ykPassword` | `YUBIKEY-OATH-PASSWORD` | Required when `ykPassRequired` is `true`. This value is a plain-text string of your Yubikey OATH password. |
-| `ykOrderOverride` | `false` | OATH codes are read from Yubikey and displayed in alphabetical order. To override this behavior, or to selectively group or omit codes, set value to `true`. When set to `true`, you must provide at minimum the values for all three `groupPrimary` settings (identified below). |
+| `ykOrderOverride` | `false` | OATH codes are read from Yubikey and displayed in alphabetical order. To override this behavior, or to selectively group or omit codes, set value to `true`. When set to `true`, you must provide *(at minimum)* the values for all three `groupPrimary` settings (identified below). |
+| `ykUseSerial` | `false` | Change to `true` to directly target a specific Yubikey if you have (or expect to have) multiple Yubikeys connected to your machine at one time. When `true`, `ykDevice` must also be supplied for proper operation. |
+| `ykDevice` | `99999999` | Required when `ykUseSerial` is `true`. The Serial Number of the Yubikey you want the module to read from. |
 | `iconEnable` | `true` | Designed to be used in conjunction with [Nerd Fonts](https://www.nerdfonts.com/). If set to `true`, values specified in the `iconArray` will be used to "look up" which Nerd Font glyphs should be used with each OATH code from the Yubikey. |
 | `groupSecondaryEnable` | `true` | Enable support for grouping Yubikey OATH keys in two groups. |
+| `submenuEnable` | `false` | Enable nesting of OATH keys under their group name. Causes only one group of keys to be visible at a time. |
 
 ### Configuration Settings
 | Setting | Note |
@@ -31,5 +34,24 @@
 * Tested and working with Yubikey OATH codes regardless of "touch" setting. If your code has been configured to require touch, no additional prompts will display on-screen, but your Yubikey will begin to flash after clicking the name of the code you with you retrieve. Tap your key as usual and the value will be recorded to the macOS clipboard.
 
 ### Changes
+
+#### [1.0.4] - 2025-02-09
+
+##### Added
+
+* Support for multiple device handling and enabling selection of specific keys by serial number (`ykUseSerial` and `ykDevice`).
+
+##### Changed
+
+* Cleaned up notes/comments in the first several lines of the file.
+* Moved `ykOathList` variable to more appropriate location. *(Not intended for user modification.)*
+* Moved `groupSecondaryEnable` up to the list of commonly updated parameters for better visibility.
+* Revised the "on-click" action and "get list" operations to be dynamically constructed vs using conditional logic.
+* Removed `submenuEnable` references from sections of the script where it will never be executed.
+
+#### [1.0.3] - 2025-02-02
+
+##### Changed
+
 * The *shebang* has been changed from `#!/bin/bash` to `#!/usr/bin/env bash`.
 * The previous version included poor handling for the `PATH` variable. The current version has checks to determine if it is running on Apple Silicon and sets the Homebrew path accordingly.
