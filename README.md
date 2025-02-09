@@ -10,7 +10,7 @@ _HOWEVER_, it is still up to you to ensure that your Yubikey is configured prope
 
 **Yubikey xbar module**: _(see `./yubikey-support`)_
 * [Yubikey MFA for macOS](./yubikey-support/README.md)
-    * Current Version: `v1.0.2`
+    * Current Version: `v1.0.4`
 
 **Legacy xbar module**: _(see `./legacy`)_
 * [Legacy MFA for macOS](./legacy/README.md)
@@ -18,7 +18,7 @@ _HOWEVER_, it is still up to you to ensure that your Yubikey is configured prope
 
 **Terminal**: _(see `./terminal`)_
 * [Yubikey MFA via Termianl](./terminal-yubikey/README.md)
-    * Current Version: `v1.0.0`
+    * Current Version: `v1.0.1`
 * [Legacy MFA via Terminal](./terminal-legacy/README.md)
     * Current Version: `v0.1.0`
 
